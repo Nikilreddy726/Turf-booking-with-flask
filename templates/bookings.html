@@ -11,8 +11,9 @@
         background: url(https://png.pngtree.com/background/20230616/original/pngtree-a-football-field-in-vibrant-green-3d-rendered-image-picture-image_3653598.jpg) no-repeat center center / cover;
         justify-content: center;
         align-items: center;
-        height: 100vh;
+        min-height: 100vh;
         font-family: 'Poppins', sans-serif;
+        overflow-x: hidden;
     }
 
     .container {
@@ -61,28 +62,45 @@
         background-color: rgb(226, 14, 14);
     }
 
+    @media (max-width: 1024px) {
+        .container {
+            width: 95%;
+            padding: 20px;
+        }
+    }
+
     @media (max-width: 768px) {
         body {
-            height: auto;
             display: block;
             padding: 20px;
         }
         .container {
             padding: 15px;
+            width: 100%;
         }
         .table-responsive {
             overflow-x: auto;
+            display: block;
+            width: 100%;
         }
     }
 
     @media (max-width: 480px) {
         .table th, .table td {
             font-size: 12px;
-            padding: 8px;
+            padding: 6px;
         }
         .btn-delete {
             padding: 3px 6px;
             font-size: 12px;
+        }
+        .container {
+            padding: 10px;
+            width: 100%;
+        }
+        .table-responsive {
+            overflow-x: scroll;
+            width: 100%;
         }
     }
 </style>
