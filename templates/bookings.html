@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %} Bookings {% endblock title %}
+{% block body %}
+
+<!-- Page Styles -->
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        background: url(https://png.pngtree.com/background/20230616/original/pngtree-a-football-field-in-vibrant-green-3d-rendered-image-picture-image_3653598.jpg) no-repeat center center / cover;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .container {
+        padding: 30px;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 6px 40px rgba(0, 0, 0, 0.3);
+        width: 90%;
+        max-width: 1100px;
+    }
+
+    h2 {
+        color: white;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .table {
+        color: white;
+        text-align: center;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .table th {
+        background: rgba(255, 255, 255, 0.2);
+        color: rgb(38, 15, 241);
+    }
+
+    .table td {
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-delete {
+        background-color: rgba(11, 238, 106, 0.7);
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+    }
+
+    .btn-delete:hover {
+        background-color: rgb(226, 14, 14);
+    }
+</style>
+
+<section style="width: 100vw;">
+    <div class="container mt-4">
+        <h2>Bookings</h2>
+        <!-- Table displaying bookings -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Sport</th>
+                        <th>Date</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Location</th>
+                        <th>Payment Option</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.name }}</td>
+                        <td>{{ booking.sport}}</td>
+                        <td>{{ booking.date }}</td>
+                        <td>{{ booking.start_time.strftime('%I:%M %p') }}</td>
+                        <td>{{ booking.end_time.strftime('%I:%M %p') }}</td>
+                        <td>{{ booking.location }}</td>
+                        <td>{{ booking.payment }}</td>
+                        <td>
+                            <form action="{{ url_for('delete_booking', booking_id=booking.id) }}" method="POST">
+                                <button type="submit" class="btn btn-delete">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock body %}

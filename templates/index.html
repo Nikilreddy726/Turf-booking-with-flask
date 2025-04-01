@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% block title %} Home {% endblock title %}
+{% block body %}
+
+<!-- Page Styles -->
+<style>
+    /* Full-Screen Background */
+    body {
+        margin: 0;
+        padding: 0;
+        background: url('https://wallpapercave.com/wp/wp8117115.jpg') no-repeat center center fixed;
+        background-size: cover;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        text-align: center;
+        position: relative;
+    }
+
+    /* Dark Overlay */
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5); /* Dark transparent overlay */
+        backdrop-filter: blur(3px);
+        z-index: 1;
+    }
+
+    /* Main Content Container */
+    .content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 600px; /* Keeps content centered and responsive */
+        padding: 20px;
+        text-align: center;
+    }
+
+    /* Main Heading */
+    h1 {
+        font-size: 50px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.8);
+        margin-bottom: 20px;
+        animation: fadeIn 2s ease-in-out;
+    }
+
+    /* Explore Button */
+    .btn-explore {
+        background-color: white;
+        color: black;
+        font-size: 20px;
+        padding: 12px 25px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.3s ease-in-out;
+        display: inline-block;
+        animation: fadeIn 2.5s ease-in-out;
+    }
+
+    .btn-explore:hover {
+        background-color: #ffcc00;
+        transform: scale(1.1);
+        box-shadow: 0px 0px 15px rgba(255, 204, 0, 0.7);
+    }
+
+    /* Bottom Info Bar */
+    .info-bar {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 500px;
+        padding: 10px;
+        font-size: 18px;
+        color: white;
+        font-weight: bold;
+        text-shadow: 1px 1px 5px black;
+        animation: fadeIn 3s ease-in-out;
+        z-index: 2;
+    }
+
+    /* Navigation */
+    .navigation {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 2;
+    }
+
+    .navigation a {
+        color: white;
+        font-size: 20px;
+        font-weight: 400;
+        margin: 10px;
+        text-decoration: none;
+    }
+
+    /* Fade-in Animation */
+    @keyframes fadeIn {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<!-- Content Section -->
+<section class="content">
+    <h1>Welcome to Turf Booking</h1>
+    <a href="/sports" class="btn-explore mt-3">Explore Turf</a>
+</section>
+
+<!-- Live Booking Info -->
+<div class="info-bar">
+    🌍 Live Bookings: <span id="booking-count">125+</span> | ⚽ Best Time to Play: Evening | ☀️ 27°C
+</div>
+
+{% endblock body %}

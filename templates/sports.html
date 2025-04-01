@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% block title %} Sports {% endblock title %}
+{% block body %}
+
+<!-- Page Styles -->
+<style>
+    /* Fullscreen Background */
+    body {
+        margin: 0;
+        padding: 0;
+        background: url('https://wallpapercave.com/wp/wp3432038.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: white;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h1 {
+        margin-top: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Main Container */
+    .container {
+        margin-top: 30px;
+        max-width: 1200px;
+    }
+
+    /* Flexbox Layout */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .col-md-4 {
+        flex: 1;
+        min-width: 280px;
+        max-width: 350px;
+    }
+
+    /* Card Styling */
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        text-align: center;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+    }
+
+    .card img {
+        width: 100%;
+        height: 250px;
+        object-fit: cover;
+    }
+
+    /* Booking Button */
+    .book-btn {
+        background-color: white;
+        color: black;
+        font-weight: bold;
+        padding: 10px;
+        width: 100%;
+        border: none;
+        border-radius: 0 0 10px 10px;
+        transition: 0.3s ease-in-out;
+    }
+
+    .book-btn:hover {
+        background-color: gray;
+        color: white;
+    }
+
+    /* Flash Messages */
+    .alert-container {
+        position: fixed;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 999;
+        max-width: 400px;
+        width: 90%;
+        background: rgba(233, 7, 7, 0.7);
+        backdrop-filter: blur(15px);
+        border-radius: 10px;
+        box-shadow: 0 6px 40px rgba(0, 0, 0, 0.3);
+        padding: 10px;
+        text-align: center;
+    }
+</style>
+
+<section class="container">
+    <!-- Display Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="alert-container">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <h1 class="text-center">Select Your Sport</h1>
+
+    <div class="row">
+        <!-- Cricket -->
+        <div class="col-md-4">
+            <div class="card">
+                <img src="https://img.freepik.com/premium-photo/cricket-illustration_1153477-5050.jpg"
+                    alt="Cricket">
+                <div class="card-body">
+                    <h5 class="card-title">Cricket</h5>
+                    <a href="/book?game=Cricket" class="btn book-btn">Book Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Football -->
+        <div class="col-md-4">
+            <div class="card">
+                <img src="https://img.freepik.com/free-photo/soccer-players-action-professional-stadium_654080-1187.jpg?t=st=1741926227~exp=1741929827~hmac=906ed6475b9e05300169044993212acddfbe1a0155b85b09ecd3945a6b0b7b09&w=996" 
+                    alt="Football">
+                <div class="card-body">
+                    <h5 class="card-title">Football</h5>
+                    <a href="/book?game=Football" class="btn book-btn">Book Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badminton -->
+        <div class="col-md-4">
+            <div class="card">
+                <img src="https://img.freepik.com/free-photo/badminton-concept-with-dramatic-lighting_23-2149940935.jpg?t=st=1741926294~exp=1741929894~hmac=bdf587842b15c61e4f4c47bba9b0b0e634a088b76148c1893b2ff61dff2e72c9&w=900" 
+                    alt="Badminton">
+                <div class="card-body">
+                    <h5 class="card-title">Badminton</h5>
+                    <a href="/book?game=Badminton" class="btn book-btn">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock body %}

@@ -1,0 +1,501 @@
+{% extends 'base.html' %}
+{% block title %} Book {% endblock title %}
+{% block body %}
+
+<style>
+    /* Background Image */
+    body {
+        margin: 0;
+        padding: 0;
+        background: url('https://png.pngtree.com/background/20230616/original/pngtree-a-football-field-in-vibrant-green-3d-rendered-image-picture-image_3653598.jpg') no-repeat center center/cover;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Glassmorphism Card */
+    .container {
+        width: 90%;
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(15px);
+        box-shadow: 0 6px 40px rgba(0, 0, 0, 0.3);
+        color: white;
+    }
+
+    /* Heading */
+    h2 {
+        font-weight: bold;
+        font-size: 22px;
+        text-align: center;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Form Elements */
+    .form-label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        background: rgba(233, 10, 10, 0.2);
+        border: none;
+        color: white;
+        font-size: 16px;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Button */
+    .btn-submit {
+        background: linear-gradient(45deg, #ffcc00, #ff8800);
+        color: white;
+        width: 100%;
+        font-weight: bold;
+        border: none;
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 18px;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0px 4px 15px rgba(255, 204, 0, 0.5);
+        margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+        background: linear-gradient(45deg, #ff8800, #ffcc00);
+        transform: scale(1.02);
+    }
+
+    /* Price Box */
+    .price-box {
+        font-weight: bold;
+        text-align: center;
+        margin: 15px 0;
+        background: rgba(0, 0, 0, 0.4);
+        padding: 10px;
+        border-radius: 10px;
+        color: #ffcc00;
+        font-size: 18px;
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(15px);
+        padding: 20px;
+        width: 90%;
+        max-width: 400px;
+        border-radius: 15px;
+        color: white;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .close {
+        color: white;
+        float: right;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    /* Location Selection */
+    .location-option {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .location-option:hover {
+        background: rgba(255, 204, 0, 0.6);
+    }
+
+    /* Payment Methods */
+    .payment-method {
+        display: flex;
+        justify-content: space-between;
+        margin: 15px 0;
+    }
+
+    .payment-option {
+        flex: 1;
+        padding: 10px;
+        margin: 0 5px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .payment-option.selected {
+        background: rgba(255, 204, 0, 0.6);
+    }
+
+    .payment-details {
+        display: none;
+        margin-top: 10px;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 480px) {
+        .container {
+            width: 95%;
+            padding: 15px;
+        }
+        
+        .payment-method {
+            flex-direction: column;
+        }
+        
+        .payment-option {
+            margin: 5px 0;
+        }
+    }
+</style>
+
+<div class="container">
+    <h2>Book Your Turf <span id="sport-name" onsubmit="return validateForm()"></span></h2>
+    <form action="/confirm" method="POST" autocomplete="off">
+        <input type="hidden" name="sport" id="sport-input">
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" name="name" required placeholder="Enter your name">
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control" name="date" id="bookingDate" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">Start Time</label>
+            <input type="time" class="form-control" name="start_time" id="start_time" required>
+        </div>
+        
+        <div class="mb-3">
+            <label class="form-label">End Time</label>
+            <input type="time" class="form-control" name="end_time" id="end_time" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Location</label>
+            <button type="button" class="form-control" id="openLocationModal" style="text-align: left;">Select a Location</button>
+            <input type="hidden" name="location" id="selectedLocation" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Select Turf</label>
+            <select class="form-control" id="turfSelect" name="turf" required>
+                <option value="">Select a turf</option>
+            </select>
+        </div>
+
+        <div class="price-box" id="price-display">Select a turf to see the price</div>
+        
+        <h3 style="font-size: 18px; margin: 15px 0 10px 0;">Payment Method</h3>
+        <div class="payment-method">
+            <label class="payment-option">
+                <input type="radio" name="payment" value="cash" onchange="togglePaymentDetails('cash')" hidden>
+                <span style="font-size: 20px;">💵</span><br>Cash
+            </label>
+        
+            <label class="payment-option">
+                <input type="radio" name="payment" value="upi" onchange="togglePaymentDetails('upi')" hidden>
+                <span style="font-size: 20px;">📱</span><br>UPI
+            </label>
+        
+            <label class="payment-option">
+                <input type="radio" name="payment" value="card" onchange="togglePaymentDetails('card')" hidden>
+                <span style="font-size: 20px;">💳</span><br>Card
+            </label>
+        </div>
+        
+        <div id="upi-details" class="payment-details">
+            <label for="upi_id">UPI ID</label>
+            <input type="text" class="form-control" id="upi_id" name="upi_id" placeholder="Enter UPI ID">
+        </div>
+        
+        <div id="card-details" class="payment-details">
+            <label for="card_number">Card Number</label>
+            <input type="text" class="form-control" id="card_number" name="card_number" placeholder="Enter Card Number">
+            <label for="expiry_date">Expiry Date</label>
+            <input type="month" class="form-control" id="expiry_date" name="expiry_date">
+            <label for="cvv">CVV</label>
+            <input type="password" class="form-control" id="cvv" name="cvv" placeholder="CVV" maxlength="3">
+        </div>
+        
+        <button type="submit" class="btn-submit">Confirm Booking</button>
+    </form>
+</div>
+
+<!-- Location Modal -->
+<div id="locationModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3 style="text-align: center; margin-bottom: 15px;">Choose Your Location</h3>
+        <button class="form-control" onclick="detectLocation()" style="margin-bottom: 15px;">📍 Detect My Location</button>
+
+        <h4>Select State</h4>
+        <div id="states-container">
+            <div class="location-option" onclick="showCities('Kerala')">Kerala</div>
+            <div class="location-option" onclick="showCities('Tamil Nadu')">Tamil Nadu</div>
+            <div class="location-option" onclick="showCities('Karnataka')">Karnataka</div>
+        </div>
+
+        <div id="cities-container" style="display: none;">
+            <h4>Select City</h4>
+            <div id="cities-list"></div>
+        </div>
+
+        <div id="turfs-container" style="display: none;">
+            <h4>Available Turfs</h4>
+            <div id="turfs-list"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('bookingDate').setAttribute('min', today);
+    
+        // Extract sport from URL parameters and update the UI
+        const urlParams = new URLSearchParams(window.location.search);
+        const sport = urlParams.get("game");
+        if (sport) {
+            document.getElementById("sport-name").innerText = sport;
+            document.getElementById("sport-input").value = sport;
+        }
+    
+        // Set time validation when date changes
+        document.getElementById('bookingDate').addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            
+            if (selectedDate.toDateString() === today.toDateString()) {
+                const now = new Date();
+                let hours = now.getHours();
+                let minutes = now.getMinutes();
+    
+                if (hours < 10) hours = '0' + hours;
+                if (minutes < 10) minutes = '0' + minutes;
+    
+                const currentTime = `${hours}:${minutes}`;
+                document.getElementById('start_time').setAttribute('min', currentTime);
+            } else {
+                document.getElementById('start_time').removeAttribute('min');
+            }
+            
+            document.getElementById('end_time').value = '';
+        });
+    
+        document.getElementById('start_time').addEventListener('change', function() {
+            document.getElementById('end_time').setAttribute('min', this.value);
+        });
+    });
+    
+    
+
+    // Modal functionality
+    const modal = document.getElementById('locationModal');
+    const openModalBtn = document.getElementById('openLocationModal');
+    const closeModalBtn = document.querySelector('.close');
+
+    openModalBtn.onclick = () => {
+        modal.style.display = 'flex';
+        document.getElementById('cities-container').style.display = 'none';
+        document.getElementById('turfs-container').style.display = 'none';
+        document.getElementById('states-container').style.display = 'block';
+    };
+    
+    closeModalBtn.onclick = () => modal.style.display = 'none';
+    
+    window.onclick = (event) => {
+        if (event.target === modal) modal.style.display = 'none';
+    };
+
+    // Location data
+    const locationData = {
+        "Kerala": {
+            "Thiruvananthapuram": [
+                { name: "Greenfield Stadium", area: "Karyavattom", price: 500 },
+                { name: "Trivandrum Arena", area: "Kazhakoottam", price: 700 }
+            ],
+            "Kochi": [
+                { name: "Kochi Sports Hub", area: "Vyttila", price: 650 },
+                { name: "Cochin Kickoff", area: "Edapally", price: 700 }
+            ]
+        },
+        "Tamil Nadu": {
+            "Chennai": [
+                { name: "Chennai Football Club", area: "Anna Nagar", price: 600 },
+                { name: "Marina Turf", area: "Marina Beach", price: 650 }
+            ],
+            "Madurai": [
+                { name: "Madurai Turf", area: "Tallakulam", price: 650 },
+                { name: "Madurai Sports Arena", area: "Anna Nagar", price: 700 }
+            ]
+        },
+        "Karnataka": {
+            "Bangalore": [
+                { name: "Bangalore Kickoff", area: "Indiranagar", price: 750 },
+                { name: "Mysore Sports Complex", area: "JP Nagar", price: 700 }
+            ],
+            "Mysore": [
+                { name: "Mysore Football Ground", area: "Lakshmipuram", price: 500 },
+                { name: "Chamundi Turf", area: "Chamundi Hills", price: 700 }
+            ]
+        }
+    };
+
+    // Show cities for selected state
+    function showCities(state) {
+        document.getElementById('states-container').style.display = 'none';
+        const citiesList = document.getElementById('cities-list');
+        citiesList.innerHTML = '';
+        
+        for (const city in locationData[state]) {
+            const cityElement = document.createElement('div');
+            cityElement.className = 'location-option';
+            cityElement.textContent = city;
+            cityElement.onclick = () => showTurfs(state, city);
+            citiesList.appendChild(cityElement);
+        }
+        
+        document.getElementById('cities-container').style.display = 'block';
+    }
+
+    // Show turfs for selected city
+    function showTurfs(state, city) {
+        document.getElementById('cities-container').style.display = 'none';
+        const turfsList = document.getElementById('turfs-list');
+        turfsList.innerHTML = '';
+        const turfSelect = document.getElementById('turfSelect');
+        turfSelect.innerHTML = '<option value="">Select a turf</option>';
+
+        locationData[state][city].forEach(turf => {
+            // Add to modal list
+            const turfElement = document.createElement('div');
+            turfElement.className = 'location-option';
+            turfElement.textContent = `${turf.name} (₹${turf.price})`;
+            turfElement.onclick = () => selectTurf(turf.name, turf.area, turf.price);
+            turfsList.appendChild(turfElement);
+
+            // Add to dropdown
+            const option = document.createElement('option');
+            option.value = turf.name;
+            option.setAttribute('data-price', turf.price);
+            option.textContent = `${turf.name} - ${turf.price}/hr`;
+            turfSelect.appendChild(option);
+        });
+
+        document.getElementById('turfs-container').style.display = 'block';
+    }
+
+    // Select a turf
+    function selectTurf(turfName, area, price) {
+        document.getElementById('selectedLocation').value = area;
+        document.getElementById('openLocationModal').textContent = area;
+        document.getElementById('price-display').textContent = `Price: ₹${price}/hr - ${turfName}`;
+        document.getElementById('turfSelect').value = turfName;
+        modal.style.display = 'none';
+    }
+
+    // Detect user's location
+    function detectLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const latitude = position.coords.latitude;
+                    const longitude = position.coords.longitude;
+                    
+                    // In a real app, you would use these coordinates to find nearby turfs
+                    alert(`Location detected: ${latitude}, ${longitude}\n(Note: This is a demo. In a real app, this would show nearby turfs.)`);
+                    
+                    // For demo purposes, we'll just set a generic location
+                    document.getElementById('selectedLocation').value = "Your Current Location";
+                    document.getElementById('openLocationModal').textContent = "Your Current Location";
+                    modal.style.display = 'none';
+                },
+                error => {
+                    alert("Unable to retrieve your location. Please select manually.");
+                }
+            );
+        } else {
+            alert("Geolocation is not supported by your browser.");
+        }
+    }
+
+    // Calculate price based on duration
+    function calculateDuration() {
+        const startTime = document.getElementById("start_time").value;
+        const endTime = document.getElementById("end_time").value;
+        const turfSelect = document.getElementById("turfSelect");
+        const selectedOption = turfSelect.options[turfSelect.selectedIndex];
+
+        if (startTime && endTime && selectedOption && selectedOption.value) {
+            const start = new Date(`1970-01-01T${startTime}:00`);
+            const end = new Date(`1970-01-01T${endTime}:00`);
+            let duration = (end - start) / (1000 * 60 * 60); // Hours
+            
+            if (duration <= 0) {
+                document.getElementById("price-display").textContent = "Invalid time selection";
+                return;
+            }
+
+            const basePrice = parseFloat(selectedOption.getAttribute("data-price"));
+            const totalPrice = (basePrice * duration).toFixed(2);
+            document.getElementById("price-display").textContent = `Total: ₹${totalPrice} (${duration} hrs)`;
+        }
+    }
+
+    // Set up event listeners
+    document.getElementById("turfSelect").addEventListener("change", calculateDuration);
+    document.getElementById("start_time").addEventListener("change", calculateDuration);
+    document.getElementById("end_time").addEventListener("change", calculateDuration);
+
+    // Payment method selection
+    function togglePaymentDetails(method) {
+        document.getElementById("upi-details").style.display = method === "upi" ? "block" : "none";
+        document.getElementById("card-details").style.display = method === "card" ? "block" : "none";
+        
+        // Update selected style
+        document.querySelectorAll(".payment-option").forEach(option => {
+            option.classList.remove("selected");
+        });
+        document.querySelector(`input[value="${method}"]`).parentElement.classList.add("selected");
+    }
+    
+</script>
+
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}Confirmed{% endblock title %}
+{% block body %}
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(135deg, #18d35c, hsl(152, 82%, 76%));
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .thank-you-card {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+        max-width: 450px;
+        color: white;
+    }
+
+    .checkmark-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 80px;
+        width: 80px;
+        background: white;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+    }
+
+    .checkmark {
+        font-size: 40px;
+        color: #28a745;
+    }
+
+    .btn-home {
+        background: linear-gradient(45deg, hsl(162, 100%, 50%), #0056b3);
+        color: white;
+        width: 100%;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 10px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="thank-you-card">
+    <div class="checkmark-container">
+        <span class="checkmark">✔</span>
+    </div>
+    <h2>Thank You, {{ name }}!</h2>
+    <p>Your booking has been confirmed successfully.</p>
+    <p>{{ location }}</p>
+    <p>We appreciate your booking and look forward to seeing you soon!</p>
+    <a href="/" class="btn-home">Back to Home</a>
+    <a href="/bookings" class="btn-home">View Bookings</a>
+</div>
+
+{% endblock body %}
